@@ -1,5 +1,6 @@
 <script setup lang="ts">
     const router = useRouter()
+    const toast = useToast()
 
     const post = reactive({
         title: '',
@@ -12,6 +13,14 @@
     const clearFields = () => {
         post.title = ''
         post.description = ''
+    }
+
+    function showCreatePostToast() {
+        toast.add({
+            title: 'Created!',
+            description: 'Post created successfully',
+            color: 'success'
+        })
     }
 
     const submit = async () => {
@@ -29,6 +38,8 @@
                 method: 'POST',
                 body: post
             })
+
+            showCreatePostToast()
 
             router.push({ name: 'blog' })
         } catch {
