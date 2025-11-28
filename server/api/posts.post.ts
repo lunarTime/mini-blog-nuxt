@@ -17,6 +17,15 @@ export default defineEventHandler(async event => {
     }
 
     const slug = transliterate(body.title)
+    const existingSlug = await $fetch(`${config.public.apiBase}/posts?slug=${slug}`)
+
+    if (existingSlug.length > 0) {
+        throw createError({
+            statusCode: 409,
+            statusMessage: 'Post with this title already exists'
+        })
+    }
+
     const formattedDate = formatDate()
 
     const newPost = {
