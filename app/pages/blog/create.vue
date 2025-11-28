@@ -15,17 +15,15 @@
         post.description = ''
     }
 
-    function showCreatePostToast() {
-        toast.add({
-            title: 'Created!',
-            description: 'Post created successfully',
-            color: 'success'
-        })
-    }
-
     const submit = async () => {
         if (!post.title.trim() || !post.description.trim()) {
             errorMessage.value = 'Please fill all fields.'
+
+            toast.add({
+                title: 'Validation error',
+                description: errorMessage.value,
+                color: 'error'
+            })
 
             return
         }
@@ -39,11 +37,19 @@
                 body: post
             })
 
-            showCreatePostToast()
+            toast.add({
+                title: 'Success!',
+                description: 'Post created successfully',
+                color: 'success'
+            })
 
             router.push({ name: 'blog' })
-        } catch {
-            errorMessage.value = 'Failed to create post.'
+        } catch (error: any) {
+            toast.add({
+                title: 'Failed!',
+                description: error?.statusMessage ?? 'Failed to create the post. Please try again.',
+                color: 'error'
+            })
         } finally {
             loading.value = false
         }
@@ -106,6 +112,7 @@
                             size="xl"
                             class="w-fit font-semibold text-lg text-gray-100"
                             color="error"
+                            type="submit"
                             @click="clearFields"
                         >
                             Clear fields
