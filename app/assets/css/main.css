@@ -1,4 +1,5 @@
 @import 'tailwindcss';
+@import '@/assets/css/globals.css';
 @import '@nuxt/ui';
 
 body {
