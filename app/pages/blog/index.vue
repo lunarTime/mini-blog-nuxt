@@ -14,7 +14,16 @@
 
 <template>
     <section>
-        <h1 class="text-3xl font-bold mb-8">Blog items</h1>
+        <div class="flex items-center justify-between gap-4 w-full mb-8">
+            <h1 class="text-3xl font-bold">Blog items</h1>
+            <UButton
+                :to="{ name: 'blog-create' }"
+                size="xl"
+                class="w-fit font-semibold text-lg"
+            >
+                Create post
+            </UButton>
+        </div>
 
         <div
             v-if="!postsData"
@@ -37,13 +46,14 @@
             <article
                 v-for="post in postsData"
                 :key="post.slug"
-                class="flex"
+                class="post-item flex"
             >
-                <UCard class="flex flex-col">
+                <UCard>
                     <template #header>
                         <NuxtLink
                             :to="{ name: 'blog-slug', params: { slug: post.slug } }"
-                            class="font-semibold lg:text-xl text-lg"
+                            class="block font-semibold lg:text-xl text-lg"
+                            :title="post.slug"
                         >
                             {{ post.title }}
                         </NuxtLink>
@@ -74,3 +84,27 @@
         </div>
     </section>
 </template>
+
+<style scoped>
+    .post-item :deep([data-slot='root']) {
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+    }
+    .post-item :deep([data-slot='header'] a) {
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+    .post-item :deep([data-slot='body']) {
+        flex: 1;
+    }
+
+    @media (width > 639px) {
+        .post-item :deep([data-slot='header'] a) {
+            min-height: 56px;
+        }
+    }
+</style>
