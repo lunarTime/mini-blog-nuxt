@@ -1,7 +1,5 @@
 <template>
-    <v-app>
-        <v-main>
-            <slot />
-        </v-main>
-    </v-app>
+    <UContainer class="py-4 space-y-10">
+        <slot />
+    </UContainer>
 </template>
