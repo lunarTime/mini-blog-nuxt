@@ -1,0 +1,28 @@
+{
+    "posts": [
+        {
+            "id": 1,
+            "title": "Nuxt 3.13 Released",
+            "description": "The latest Nuxt release brings major DX improvements, faster cold starts, and new server features.",
+            "slug": "nuxt-3-13-release",
+            "published": true,
+            "date": "2025-02-12"
+        },
+        {
+            "id": 2,
+            "title": "Nuxt Image v2 Announced",
+            "description": "Nuxt Image Module v2 brings improved CDN presets, faster image transformations, and new providers.",
+            "slug": "nuxt-image-v2",
+            "published": true,
+            "date": "2025-01-18"
+        },
+        {
+            "id": 3,
+            "title": "Nuxt UI Pro Receives Major Component Upgrade",
+            "description": "Nuxt UI Pro adds new components, accessibility improvements, and stronger Tailwind integration.",
+            "slug": "nuxt-ui-pro-2025",
+            "published": true,
+            "date": "2025-03-03"
+        }
+    ]
+}
