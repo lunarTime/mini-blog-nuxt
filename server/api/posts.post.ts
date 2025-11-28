@@ -1,3 +1,6 @@
+import { transliterate } from '@/utils/transliterate'
+import { formatDate } from '@/utils/formatDate'
+
 export default defineEventHandler(async event => {
     const config = useRuntimeConfig()
 
@@ -13,18 +16,8 @@ export default defineEventHandler(async event => {
         })
     }
 
-    const slug = body.title
-        .toLowerCase()
-        .trim()
-        .replace(/\s+/g, '-')
-        .replace(/[^a-z0-9-]/g, '')
-
-    const now = new Date()
-    const formattedDate = [
-        now.getFullYear(),
-        String(now.getMonth() + 1).padStart(2, '0'),
-        String(now.getDate()).padStart(2, '0')
-    ].join('-')
+    const slug = transliterate(body.title)
+    const formattedDate = formatDate()
 
     const newPost = {
         ...body,
