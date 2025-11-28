@@ -1,6 +1,7 @@
 export default defineNuxtConfig({
     devtools: { enabled: true },
-    modules: ['@nuxt/content', '@nuxt/hints', '@nuxt/ui'],
+    compatibilityDate: '2025-11-26',
+    modules: ['@nuxt/hints', '@nuxt/ui'],
     app: {
         head: {
             meta: [
@@ -17,6 +18,12 @@ export default defineNuxtConfig({
     nitro: {
         prerender: {
             routes: ['/', '/blog']
+        }
+    },
+    runtimeConfig: {
+        public: {
+            siteUrl: 'http://localhost:3000',
+            apiBase: 'http://localhost:3001'
         }
     },
     css: ['~/assets/css/main.css', '@mdi/font/css/materialdesignicons.css']
