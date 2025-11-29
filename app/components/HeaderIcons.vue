@@ -20,6 +20,6 @@
                 aria-label="LinkedIn"
             />
         </UTooltip>
-        <ThemeSwitcher />
+        <UColorModeButton />
     </div>
 </template>
