@@ -3,10 +3,12 @@ export default defineEventHandler(async event => {
 
     const { slug } = event.context.params
 
-    if (!slug || typeof slug !== 'string') {
+    console.log(slug)
+
+    if (!slug) {
         throw createError({
             statusCode: 400,
-            statusMessage: 'Invalid slug'
+            statusMessage: 'Invalid slug ' + slug
         })
     }
 
