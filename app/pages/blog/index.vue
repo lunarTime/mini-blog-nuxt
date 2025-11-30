@@ -70,14 +70,26 @@
                         v-if="post.date"
                         #footer
                     >
-                        <time :datetime="post.date">
-                            <UBadge
-                                color="primary"
-                                variant="soft"
+                        <div class="flex items-center gap-2">
+                            <time
+                                class="post-date"
+                                :datetime="post.date"
                             >
-                                {{ post.date }}
-                            </UBadge>
-                        </time>
+                                <UBadge
+                                    color="primary"
+                                    variant="soft"
+                                >
+                                    {{ post.date }}
+                                </UBadge>
+                            </time>
+                            <UButton
+                                size="sm"
+                                variant="ghost"
+                                color="primary"
+                                :to="{ name: 'blog-slug-edit', params: { slug: post.slug } }"
+                                icon="i-mynaui-edit-solid"
+                            />
+                        </div>
                     </template>
                 </UCard>
             </article>
@@ -100,6 +112,9 @@
     }
     .post-item :deep([data-slot='body']) {
         flex: 1;
+    }
+    .post-item .post-date > span {
+        display: block;
     }
 
     @media (width > 639px) {
