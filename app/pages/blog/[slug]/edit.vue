@@ -7,7 +7,7 @@
     const errorMessage = ref('')
 
     const { data: post, pending: isLoading } = await useAsyncData(`post-${route.params.slug}`, () =>
-        $fetch(`/api/posts/${route.params.slug}`)
+        $fetch(`/api/posts/slug/${route.params.slug}`)
     )
 
     const postForm = reactive({
@@ -46,7 +46,7 @@
             loading.value = true
             errorMessage.value = ''
 
-            const updatedPost = await $fetch(`/api/posts/${route.params.slug}`, {
+            const updatedPost = await $fetch(`/api/posts/${post.value.id}`, {
                 method: 'PATCH',
                 body: {
                     title: postForm.title,
