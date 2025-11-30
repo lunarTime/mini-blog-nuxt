@@ -125,14 +125,16 @@
                                 </UBadge>
                             </time>
                             <div class="flex items-center gap-2">
-                                <UButton
-                                    size="sm"
-                                    variant="ghost"
-                                    color="primary"
-                                    :to="{ name: 'blog-slug-edit', params: { slug: post.slug } }"
-                                    icon="i-mynaui-edit-solid"
-                                />
-                                <UTooltip text="Detele post?">
+                                <UTooltip text="Edit post">
+                                    <UButton
+                                        size="sm"
+                                        variant="ghost"
+                                        color="primary"
+                                        :to="{ name: 'blog-slug-edit', params: { slug: post.slug } }"
+                                        icon="i-mynaui-edit-solid"
+                                    />
+                                </UTooltip>
+                                <UTooltip text="Delete post">
                                     <UButton
                                         size="sm"
                                         variant="ghost"
