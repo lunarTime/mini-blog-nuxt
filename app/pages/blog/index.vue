@@ -1,10 +1,54 @@
 <script setup lang="ts">
-    const { data: postsData } = await useFetch('/api/posts', {
+    const toast = useToast()
+
+    const { data: postsData, refresh } = await useFetch('/api/posts', {
         key: 'posts',
         server: true,
         lazy: false,
         watch: false
     })
+
+    const loading = ref(false)
+    const deleteModalOpen = ref(false)
+    const errorMessage = ref('')
+    const selectedPostId = ref<string | null>(null)
+
+    const openDeleteModal = (id: string) => {
+        selectedPostId.value = id
+        deleteModalOpen.value = true
+    }
+
+    const deletePostHandler = async () => {
+        if (!selectedPostId.value) return
+
+        try {
+            loading.value = true
+            errorMessage.value = ''
+
+            await $fetch(`/api/posts/${selectedPostId.value}`, {
+                method: 'DELETE'
+            })
+
+            toast.add({
+                title: 'Success!',
+                description: `Post deleted successfully`,
+                color: 'success'
+            })
+
+            deleteModalOpen.value = false
+            selectedPostId.value = null
+
+            await refresh()
+        } catch (error: any) {
+            toast.add({
+                title: 'Failed!',
+                description: error?.statusMessage ?? 'Failed to delete post. Please try again.',
+                color: 'error'
+            })
+        } finally {
+            loading.value = false
+        }
+    }
 
     useSeoMeta({
         title: 'Blog | Nuxt 4 mini-blog',
@@ -66,12 +110,10 @@
                         {{ post.description }}
                     </p>
 
-                    <template
-                        v-if="post.date"
-                        #footer
-                    >
-                        <div class="flex items-center gap-2">
+                    <template #footer>
+                        <div class="flex items-center justify-between gap-2">
                             <time
+                                v-if="post.date"
                                 class="post-date"
                                 :datetime="post.date"
                             >
@@ -82,19 +124,57 @@
                                     {{ post.date }}
                                 </UBadge>
                             </time>
-                            <UButton
-                                size="sm"
-                                variant="ghost"
-                                color="primary"
-                                :to="{ name: 'blog-slug-edit', params: { slug: post.slug } }"
-                                icon="i-mynaui-edit-solid"
-                            />
+                            <div class="flex items-center gap-2">
+                                <UButton
+                                    size="sm"
+                                    variant="ghost"
+                                    color="primary"
+                                    :to="{ name: 'blog-slug-edit', params: { slug: post.slug } }"
+                                    icon="i-mynaui-edit-solid"
+                                />
+                                <UTooltip text="Detele post?">
+                                    <UButton
+                                        size="sm"
+                                        variant="ghost"
+                                        color="error"
+                                        icon="i-mynaui-trash-solid"
+                                        @click="openDeleteModal(post.id)"
+                                        :ui="{
+                                            base: 'cursor-pointer'
+                                        }"
+                                    />
+                                </UTooltip>
+                            </div>
                         </div>
                     </template>
                 </UCard>
             </article>
         </div>
     </section>
+    <UModal
+        v-model:open="deleteModalOpen"
+        title="Delete post"
+        :ui="{ footer: 'justify-end' }"
+    >
+        <template #body>
+            <p>Are you sure you want to delete this post?</p>
+        </template>
+
+        <template #footer="{ close }">
+            <UButton
+                label="Cancel"
+                color="neutral"
+                variant="outline"
+                @click="close"
+            />
+            <UButton
+                label="Delete"
+                color="error"
+                :loading="loading"
+                @click="deletePostHandler"
+            />
+        </template>
+    </UModal>
 </template>
 
 <style scoped>
