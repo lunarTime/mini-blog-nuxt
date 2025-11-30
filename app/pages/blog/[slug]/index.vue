@@ -24,7 +24,7 @@
                 {{ postData.title }}
             </h1>
 
-            <template v-if="postData?.date">
+            <template v-if="postData.date">
                 <time :datetime="postData.date">
                     <UBadge
                         color="primary"
@@ -48,8 +48,9 @@
             class="mt-10"
             color="primary"
             variant="soft"
+            icon="mdi-arrow-left-bold"
         >
-            <span class="mdi mdi-arrow-left-bold"></span> Back
+            Back
         </UButton>
     </article>
 
