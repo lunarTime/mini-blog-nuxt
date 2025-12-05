@@ -1,75 +1,45 @@
-# Nuxt Minimal Starter
+# 📘 Mini-blog (Vue 3 + Nuxt 4)
 
-Look at the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+Mini-blog application built with **Vue 3**, **Nuxt 4**, **Nuxt UI**, and **JSON Server**.  
+A basic mini-blog demo of Vue 3 and Nuxt 4, combined with a clean CRUD architecture, canonical file structure, and on-page SEO optimization.
 
-## Setup
+---
 
-Make sure to install dependencies:
+## 🚀 Features
+
+- 📄 Browse all posts  
+- 🔍 View a single post page  
+- ✏️ Edit existing posts  
+- ➕ Create new posts  
+- 🗑️ Delete posts
+
+---
+
+## 🖥️ Development stack
+
+- **Vue 3 (Composition API)**
+- **Nuxt 4**
+- **Nuxt UI**
+- **Tailwind**
+- **JSON Server**
+
+---
+
+## 🛠️ Development setup with npm
+
+### 1. Install dependencies
 
 ```bash
-# npm
-npm install
-
-# pnpm
-pnpm install
-
-# yarn
-yarn install
-
-# bun
-bun install
+npm i
 ```
 
-## Development Server
-
-Start the development server on `http://localhost:3000`:
-
+### 2. Start the Nuxt development server
 ```bash
-# npm
 npm run dev
-
-# pnpm
-pnpm dev
-
-# yarn
-yarn dev
-
-# bun
-bun run dev
 ```
 
-## Production
-
-Build the application for production:
+### 3. Start the JSON Server backend
 
 ```bash
-# npm
-npm run build
-
-# pnpm
-pnpm build
-
-# yarn
-yarn build
-
-# bun
-bun run build
+npx json-server db.json --port 3001
 ```
-
-Locally preview production build:
-
-```bash
-# npm
-npm run preview
-
-# pnpm
-pnpm preview
-
-# yarn
-yarn preview
-
-# bun
-bun run preview
-```
-
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
