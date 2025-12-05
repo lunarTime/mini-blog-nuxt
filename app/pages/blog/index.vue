@@ -1,54 +1,9 @@
 <script setup lang="ts">
+    import { POSTS_PAGE_SIZE } from '@/constants/pagination'
+
+    const { posts, page, totalPages, totalPosts, deleteModalOpen, loading, openDeleteModal, deletePostHandler } =
+        usePosts()
     const toast = useToast()
-
-    const { data: postsData, refresh } = await useFetch('/api/posts', {
-        key: 'posts',
-        server: true,
-        lazy: false,
-        watch: false
-    })
-
-    const loading = ref(false)
-    const deleteModalOpen = ref(false)
-    const errorMessage = ref('')
-    const selectedPostId = ref<string | null>(null)
-
-    const openDeleteModal = (id: string) => {
-        selectedPostId.value = id
-        deleteModalOpen.value = true
-    }
-
-    const deletePostHandler = async () => {
-        if (!selectedPostId.value) return
-
-        try {
-            loading.value = true
-            errorMessage.value = ''
-
-            await $fetch(`/api/posts/${selectedPostId.value}`, {
-                method: 'DELETE'
-            })
-
-            toast.add({
-                title: 'Success!',
-                description: `Post deleted successfully`,
-                color: 'success'
-            })
-
-            deleteModalOpen.value = false
-            selectedPostId.value = null
-
-            await refresh()
-        } catch (error: any) {
-            toast.add({
-                title: 'Failed!',
-                description: error?.statusMessage ?? 'Failed to delete post. Please try again.',
-                color: 'error'
-            })
-        } finally {
-            loading.value = false
-        }
-    }
 
     useSeoMeta({
         title: 'Blog | Nuxt 4 mini-blog',
@@ -70,89 +25,96 @@
         </div>
 
         <div
-            v-if="!postsData"
+            v-if="loading"
             class="text-center"
         >
             Loading...
         </div>
-
         <div
-            v-else-if="!postsData.length"
+            v-else-if="!posts.length"
             class="text-center"
         >
             No posts yet.
         </div>
 
-        <div
-            v-else
-            class="grid gap-6 xl:grid-cols-3 sm:grid-cols-2 grid-cols-1"
-        >
-            <article
-                v-for="post in postsData"
-                :key="post.slug"
-                class="post-item flex"
-            >
-                <UCard>
-                    <template #header>
-                        <NuxtLink
-                            :to="{ name: 'blog-slug', params: { slug: post.slug } }"
-                            class="block font-semibold lg:text-xl text-lg"
-                            :title="post.slug"
-                        >
-                            {{ post.title }}
-                        </NuxtLink>
-                    </template>
-
-                    <p
-                        v-if="post.description"
-                        class="truncate-line-3 lg:text-lg text-sm"
-                    >
-                        {{ post.description }}
-                    </p>
-
-                    <template #footer>
-                        <div class="flex items-center justify-between gap-2">
-                            <time
-                                v-if="post.date"
-                                class="post-date"
-                                :datetime="post.date"
+        <div v-else>
+            <div class="grid gap-6 xl:grid-cols-3 sm:grid-cols-2 grid-cols-1">
+                <article
+                    v-for="post in posts"
+                    :key="post.slug"
+                    class="post-item flex"
+                >
+                    <UCard>
+                        <template #header>
+                            <NuxtLink
+                                :to="{ name: 'blog-slug', params: { slug: post.slug } }"
+                                class="block font-semibold lg:text-xl text-lg"
+                                :title="post.slug"
                             >
-                                <UBadge
-                                    color="primary"
-                                    variant="soft"
+                                {{ post.title }}
+                            </NuxtLink>
+                        </template>
+
+                        <p
+                            v-if="post.description"
+                            class="truncate-line-3 lg:text-lg text-sm"
+                            >{{ post.description }}</p
+                        >
+
+                        <template #footer>
+                            <div class="flex items-center justify-between gap-2">
+                                <time
+                                    v-if="post.date"
+                                    class="post-date"
+                                    :datetime="post.date"
                                 >
-                                    {{ post.date }}
-                                </UBadge>
-                            </time>
-                            <div class="flex items-center gap-2">
-                                <UTooltip text="Edit post">
-                                    <UButton
-                                        size="sm"
-                                        variant="ghost"
+                                    <UBadge
                                         color="primary"
-                                        :to="{ name: 'blog-slug-edit', params: { slug: post.slug } }"
-                                        icon="i-mynaui-edit-solid"
-                                    />
-                                </UTooltip>
-                                <UTooltip text="Delete post">
-                                    <UButton
-                                        size="sm"
-                                        variant="ghost"
-                                        color="error"
-                                        icon="i-mynaui-trash-solid"
-                                        @click="openDeleteModal(post.id)"
-                                        :ui="{
-                                            base: 'cursor-pointer'
-                                        }"
-                                    />
-                                </UTooltip>
+                                        variant="soft"
+                                        >{{ post.date }}</UBadge
+                                    >
+                                </time>
+                                <div class="flex items-center gap-2">
+                                    <UTooltip text="Edit post">
+                                        <UButton
+                                            size="sm"
+                                            variant="ghost"
+                                            color="primary"
+                                            :to="{ name: 'blog-slug-edit', params: { slug: post.slug } }"
+                                            icon="i-mynaui-edit-solid"
+                                        />
+                                    </UTooltip>
+                                    <UTooltip text="Delete post">
+                                        <UButton
+                                            size="sm"
+                                            variant="ghost"
+                                            color="error"
+                                            icon="i-mynaui-trash-solid"
+                                            @click="openDeleteModal(post.id)"
+                                            :ui="{ base: 'cursor-pointer' }"
+                                        />
+                                    </UTooltip>
+                                </div>
                             </div>
-                        </div>
-                    </template>
-                </UCard>
-            </article>
+                        </template>
+                    </UCard>
+                </article>
+            </div>
+
+            <div
+                v-show="totalPages > 1"
+                class="flex justify-center mt-10"
+            >
+                <UPagination
+                    v-model:page="page"
+                    :items-per-page="POSTS_PAGE_SIZE"
+                    :total="totalPosts"
+                    show-edges
+                />
+            </div>
         </div>
     </section>
+
     <UModal
         v-model:open="deleteModalOpen"
         title="Delete post"
@@ -173,7 +135,7 @@
                 label="Delete"
                 color="error"
                 :loading="loading"
-                @click="deletePostHandler"
+                @click="deletePostHandler(toast)"
             />
         </template>
     </UModal>
